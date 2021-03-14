@@ -27,24 +27,24 @@ paths:
         in: "body"
         required: true
         schema:
-          $ref: "#/definitions/Shipping"
+          $ref: "#/definitions/Calculate"
       - name: "email"
         in: "header"
         type: string
-        description: "Credencial: email"
+        description: ""
         required: true
         format: "varchar100"
       - name: "senha"
         in: "header"
         type: string
-        description: "Credencial: email"
+        description: ""
         required: true
         format: "varchar100"
       responses:
         "200":
           description: "Sucesso"
           schema:
-            $ref: "#/definitions/ApiResponse"
+            $ref: "#/definitions/ApiCalculateResponse"
         "401":
           description: "Credenciais inválidas"
           schema:
@@ -66,8 +66,58 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /tracking-shipping:
+    post:
+      tags:
+      - "tracking-shipping"
+      summary: "Rastrear pedido"
+      description: "Neste endpoint é possível você buscar informações sobre o rastreio do seu pedido informando os campos de CPF ou CNPJ e Número do Pedido, veja abaixo mais informações:"
+      operationId: "trackingShipping"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Tracking"
+      - name: "email"
+        in: "header"
+        type: string
+        description: ""
+        required: true
+        format: "varchar100"
+      - name: "senha"
+        in: "header"
+        type: string
+        description: ""
+        required: true
+        format: "varchar100"
+      responses:
+        "200":
+          description: "Sucesso"
+          schema:
+            $ref: "#/definitions/ApiTrackingResponse"
+        "401":
+          description: "Credenciais inválidas"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "404":
+          description: "Não encontrado"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "405":
+          description: "Campo inválido"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: "Erro interno"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 definitions:
-  Shipping:
+  Calculate:
     type: "object"
     required:
     - "cep"
@@ -87,7 +137,19 @@ definitions:
       numero_pedido:
         type: "string"
         example: "123ABC"
-  ApiResponse:
+  Tracking:
+    type: "object"
+    required:
+    - "cpf_cnpj"
+    - "numero_pedido"
+    properties:
+      cpf_cnpj:
+        type: "string"
+        example: "99999999999999"
+      numero_pedido:
+        type: "string"
+        example: "123ABC"
+  ApiCalculateResponse:
     type: "object"
     properties:
       uf:
@@ -97,6 +159,25 @@ definitions:
       prazo_entrega:
         type: "integer"
       numero_cotacao:
+        type: "string"
+  ApiTrackingResponse:
+    type: "object"
+    properties:
+      awb_consulta:
+        type: "string"
+      nome_remetente:
+        type: "string"
+      nome_destinatario:
+        type: "string"
+      data:
+        type: "string"
+      nota:
+        type: "string"
+      valor:
+        type: "string"
+      ocorrencia:
+        type: "string"
+      data_consulta:
         type: "string"
   ErrorResponse:
     type: "object"
