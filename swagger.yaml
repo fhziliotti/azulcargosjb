@@ -123,7 +123,6 @@ definitions:
     - "cep"
     - "peso"
     - "valor_pedido"
-    - "numero_pedido"
     properties:
       cep:
         type: "string"
@@ -134,9 +133,6 @@ definitions:
       valor_pedido:
         type: "number"
         example: "20.00"
-      numero_pedido:
-        type: "string"
-        example: "123ABC"
   Tracking:
     type: "object"
     required:
