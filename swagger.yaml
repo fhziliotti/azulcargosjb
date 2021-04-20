@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Documentação pública dos endpoints para uso em integrações de ecommerce ou ERPs da Azul Cargo São Joaquim da Barra. Para uso desta API é necessário possuir cadastro da sua empresa e credenciais para acesso, caso ainda não possua acesse: https://azulcargosjb.com.br"
-  version: "1.0.0"
+  version: "1.0.1"
   title: "Azul Cargo SJB - API"
   contact:
     email: "fhziliotti@hotmail.com"
@@ -9,42 +9,42 @@ host: "azulcargosjb.com.br"
 basePath: "/api"
 
 schemes:
-- "https"
+  - "https"
 paths:
   /calculate-shipping:
     post:
       tags:
-      - "calculate-shipping"
+        - "calculate-shipping"
       summary: "Simular cálculo de frete"
       description: "Neste endpoint é possível você simular o cálculo do frete informando os campos de CEP, Peso, Valor do Pedido e Número do Pedido, veja abaixo mais informações:"
       operationId: "calculateShipping"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "body"
-        in: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/Calculate"
-      - name: "email"
-        in: "header"
-        type: string
-        description: ""
-        required: true
-        format: "varchar100"
-      - name: "senha"
-        in: "header"
-        type: string
-        description: ""
-        required: true
-        format: "varchar100"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/CalculateShipping"
+        - name: "email"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
+        - name: "password"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
       responses:
         "200":
           description: "Sucesso"
           schema:
-            $ref: "#/definitions/ApiCalculateResponse"
+            $ref: "#/definitions/ApiCalculateShippingResponse"
         "401":
           description: "Credenciais inválidas"
           schema:
@@ -66,40 +66,83 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /tracking-shipping:
+  /delivery-order:
     post:
       tags:
-      - "tracking-shipping"
-      summary: "Rastrear pedido"
-      description: "Neste endpoint é possível você buscar informações sobre o rastreio do seu pedido informando os campos de CPF ou CNPJ e Número do Pedido, veja abaixo mais informações:"
-      operationId: "trackingShipping"
+        - "delivery-order"
+      summary: "Registrar solicitação de entrega"
+      description: "Neste endpoint é possível você registrar a solicitação de entrega do seu pedido informando os campos abaixo:"
+      operationId: "deliveryOrder"
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "body"
-        in: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/Tracking"
-      - name: "email"
-        in: "header"
-        type: string
-        description: ""
-        required: true
-        format: "varchar100"
-      - name: "senha"
-        in: "header"
-        type: string
-        description: ""
-        required: true
-        format: "varchar100"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/DeliveryOrder"
+        - name: "email"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
+        - name: "password"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
       responses:
         "200":
           description: "Sucesso"
           schema:
-            $ref: "#/definitions/ApiTrackingResponse"
+            $ref: "#/definitions/ApiDeliveryOrderResponse"
+        "401":
+          description: "Credenciais inválidas"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "500":
+          description: "Erro interno"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /tracking-shipping:
+    post:
+      tags:
+        - "tracking-shipping"
+      summary: "Rastrear pedido"
+      description: "Neste endpoint é possível você buscar informações sobre o rastreio do seu pedido informando os campos de CPF ou CNPJ e Número do Pedido, veja abaixo mais informações:"
+      operationId: "trackingShipping"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/TrackingShipping"
+        - name: "email"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
+        - name: "password"
+          in: "header"
+          type: string
+          description: ""
+          required: true
+          format: "varchar100"
+      responses:
+        "200":
+          description: "Sucesso"
+          schema:
+            $ref: "#/definitions/ApiTrackingShippingResponse"
         "401":
           description: "Credenciais inválidas"
           schema:
@@ -116,47 +159,163 @@ paths:
           description: "Erro interno"
           schema:
             $ref: "#/definitions/ErrorResponse"
+
 definitions:
-  Calculate:
+  CalculateShipping:
     type: "object"
     required:
-    - "cep"
-    - "peso"
-    - "valor_pedido"
+      - "cep"
+      - "weight"
+      - "totalValue"
     properties:
       cep:
         type: "string"
         example: "99999999"
-      peso:
+      weight:
         type: "integer"
         example: "2"
-      valor_pedido:
+      totalValue:
         type: "number"
         example: "20.00"
-  Tracking:
+        
+  DeliveryOrderAddress:
     type: "object"
     required:
-    - "cpf_cnpj"
-    - "numero_pedido"
+      - "postalCode"
+      - "street"
+      - "number"
+      - "neighborhood"
+      - "city"
+      - "state"
+      - "country"
+      - "reference"
     properties:
-      cpf_cnpj:
+      postalCode:
+        type: "string"
+        example: "99999999"
+      street:
+        type: "string"
+        example: "Rua Tal"
+      number:
+        type: "string"
+        example: "123"
+      neighborhood:
+        type: "string"
+        example: "Bairro X"
+      city:
+        type: "string"
+        example: "Cidade"
+      state:
+        type: "string"
+        example: "SP"
+      country:
+        type: "string"
+        example: "Brasil"
+      reference:
+        type: "string"
+        example: "Casa fundos"
+
+  DeliveryOrderData:
+    type: "object"
+    required:
+      - "fullName"
+      - "phone"
+      - "email"
+      - "document"
+      - "address"
+    properties:
+      fullName:
+        type: "string"
+        example: "Nome"
+      phone:
+        type: "string"
+        example: "99999999999"
+      email:
+        type: "string"
+        example: "cliente@dominio.com.br"
+      document:
+        type: "string"
+        example: "12345678912"
+      address:
+        $ref: "#/definitions/DeliveryOrderAddress"
+
+  DeliveryOrderInvoice:
+    type: "object"
+    required:
+      - "type"
+      - "number"
+      - "key"
+    properties:
+      type:
+        type: "string"
+        example: "NFe"
+      number:
+        type: "string"
+        example: "10011"
+      key:
+        type: "string"
+        example: "123456789"
+
+  DeliveryOrder:
+    type: "object"
+    required:
+      - "orderId"
+      - "storeId"
+      - "urlCallback"
+      - "sender"
+      - "recipient"
+      - "invoice"
+      - "totalValue"
+      - "totalFreight"
+    properties:
+      orderId:
         type: "string"
         example: "99999999999999"
-      numero_pedido:
+      storeId:
         type: "string"
         example: "123ABC"
-  ApiCalculateResponse:
+      urlCallback:
+        type: "string"
+        example: "https://dominiodaloja.com.br/webhook"
+      sender:
+        $ref: "#/definitions/DeliveryOrderData"
+      recipient:
+        $ref: "#/definitions/DeliveryOrderData"
+      invoice:
+        $ref: "#/definitions/DeliveryOrderInvoice"
+      totalValue:
+        type: "string"
+        example: "100.00"
+      totalFreight:
+        type: "string"
+        example: "10.00"
+
+  TrackingShipping:
+    type: "object"
+    required:
+      - "document"
+      - "orderId"
+    properties:
+      document:
+        type: "string"
+        example: "99999999999999"
+      orderId:
+        type: "string"
+        example: "123ABC"
+  
+  ApiCalculateShippingResponse:
     type: "object"
     properties:
-      uf:
+      state:
         type: "string"
-      valor_frete:
+      totalFreight:
         type: "number"
-      prazo_entrega:
+      deliveryDays:
         type: "integer"
-      numero_cotacao:
+      shippingOrderId:
         type: "string"
-  ApiTrackingResponse:
+  
+  ApiTrackingShippingResponse:
     type: "object"
     properties:
       awb_consulta:
@@ -175,6 +334,17 @@ definitions:
         type: "string"
       data_consulta:
         type: "string"
+  
+  ApiDeliveryOrderResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+      createdDate:
+        type: "string"
+
   ErrorResponse:
     type: "object"
     properties:
