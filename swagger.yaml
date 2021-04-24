@@ -256,6 +256,23 @@ definitions:
         type: "string"
         example: "123456789"
 
+  TrackingShippingEvents:
+    type: "object"
+    required:
+      - "date"
+      - "event"
+      - "details"
+    properties:
+      date:
+        type: "string"
+        example: "01/01/2021 11:20"
+      event:
+        type: "string"
+        example: "102 - Remessa enviada"
+      details:
+        type: "string"
+        example: "QJB01 - Volume(s): 1/1"
+
   DeliveryOrder:
     type: "object"
     required:
@@ -314,26 +331,30 @@ definitions:
         type: "integer"
       shippingOrderId:
         type: "string"
-  
+
   ApiTrackingShippingResponse:
     type: "object"
     properties:
-      awb_consulta:
+      awbConsulta:
         type: "string"
-      nome_remetente:
+        example: "123456789"
+      senderName:
         type: "string"
-      nome_destinatario:
+        example: "Nome remetente"
+      recipientName:
         type: "string"
-      data:
+        example: "Nome destinatário"
+      date:
         type: "string"
-      nota:
+        example: "01/01/2021 11:20"
+      orderId:
         type: "string"
-      valor:
+        example: "1"
+      totalValue:
         type: "string"
-      ocorrencia:
-        type: "string"
-      data_consulta:
-        type: "string"
+        example: "0.00"
+      events:
+        $ref: "#/definitions/TrackingShippingEvents"
   
   ApiDeliveryOrderResponse:
     type: "object"
