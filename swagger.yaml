@@ -114,7 +114,7 @@ paths:
       tags:
         - "tracking-shipping"
       summary: "Rastrear pedido"
-      description: "Neste endpoint é possível você buscar informações sobre o rastreio do seu pedido informando os campos de CPF ou CNPJ e Número do Pedido, veja abaixo mais informações:"
+      description: "Neste endpoint é possível você buscar informações sobre o rastreio do seu pedido informando os campos de CPF/CNPJ do destinatário e Número de Nota, veja abaixo mais informações:"
       operationId: "trackingShipping"
       consumes:
         - "application/json"
